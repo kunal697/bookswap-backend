@@ -1,6 +1,5 @@
 // controllers/bookController.js
 const Book = require("../models/Book");
-const WantedBook = require("../models/wantedBook");
 const multer = require("multer");
 const User = require("../models/User");
 const cloudinary = require("cloudinary").v2;
