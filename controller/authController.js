@@ -104,8 +104,9 @@ exports.login = async (req, res) => {
 
 exports.fetchUser = async (req, res) => {
   try {
-    const userId = req.user.id; // Get the user ID from the token payload
-    const user = await User.findById(userId).populate("ownedBooks wantedBooks"); // Fetch user details
+    const userId = req.user; // Get the user ID from the token payload
+
+    const user = await User.findOne(userId).populate("ownedBooks wantedBooks"); // Fetch user details
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
