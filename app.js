@@ -2,7 +2,7 @@
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
-const authRoutes = require("./routes/authRoutes");
+const authRoutes = require("./routes/authRoutes.js");
 const bookRoutes = require("./routes/bookRoutes.js");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");

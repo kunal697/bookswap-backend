@@ -102,6 +102,21 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.fetchUser = async (req, res) => {
+  try {
+    const userId = req.user.id; // Get the user ID from the token payload
+    const user = await User.findById(userId).populate("ownedBooks wantedBooks"); // Fetch user details
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(user); // Send user details as response
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 exports.logout = (req, res) => {
   res.status(200).send("Logged out");
 };
