@@ -4,6 +4,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const authRoutes = require("./routes/authRoutes.js");
 const bookRoutes = require("./routes/bookRoutes.js");
+const exchangeRoutes = require("./routes/exchange.js");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(cors({ origin: "*" }));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/exchange", exchangeRoutes);
 app.use("/api/books", bookRoutes);
 
 mongoose
