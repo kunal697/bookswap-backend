@@ -202,6 +202,7 @@ exports.findPotentialMatches = async (req, res) => {
                   title: ownedBook.title,
                   author: ownedBook.author,
                   genre: ownedBook.genre,
+                  imageUrl: ownedBook.imageUrl,
                 },
               });
             }
