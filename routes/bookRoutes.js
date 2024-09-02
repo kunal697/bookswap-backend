@@ -17,5 +17,10 @@ router.get(
   bookController.getBookRecommendations
 );
 router.get("/search", protected, bookController.searchBooks);
+router.delete(
+  "/wantedBooks/:bookId",
+  protected,
+  bookController.deleteWantedBook
+);
 
 module.exports = router;
