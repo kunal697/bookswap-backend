@@ -155,48 +155,69 @@ exports.getOwnedBooks = async (req, res) => {
 exports.findPotentialMatches = async (req, res) => {
   try {
     // Fetch the user and their wanted books
-    const userId = req.params.id;
-    const user = await User.findById(userId).populate("wantedBooks");
+    const userId = req.user;
+    const user = await User.findById(userId).populate("wantedBooks").lean();
     if (!user) {
-      throw new Error("User not found");
+      return res.status(404).json({ error: "User not found" });
     }
 
     // Fetch all other users and their owned books
-    const users = await User.find({ _id: { $ne: userId } }).populate(
-      "ownedBooks"
-    );
+    const users = await User.find({ _id: { $ne: userId } })
+      .populate("ownedBooks")
+      .lean();
+    if (!users || users.length === 0) {
+      return res.status(404).json({ error: "No other users found" });
+    }
 
     const potentialMatches = [];
 
-    // console.log(user.wantedBooks);
+    // Extract filters from query parameters
+    const { author, title, genre } = req.query;
 
-    // Check for matches based on wanted books
+    // Match books based on author's wanted books criteria
     user.wantedBooks.forEach((wantedBook) => {
       users.forEach((potentialMatch) => {
         potentialMatch.ownedBooks.forEach((ownedBook) => {
-          // Check if the book has the same title, author, or genre
-          if (
+          // Check if the book matches the user's wanted book by title, author, or genre
+          const isMatchingBook =
             wantedBook.title === ownedBook.title ||
             wantedBook.author === ownedBook.author ||
-            wantedBook.genre === ownedBook.genre
-          ) {
-            potentialMatches.push({
-              matchedUser: potentialMatch.username,
-              matchedBook: {
-                title: ownedBook.title,
-                author: ownedBook.author,
-                genre: ownedBook.genre,
-              },
-            });
+            wantedBook.genre === ownedBook.genre;
+
+          if (isMatchingBook) {
+            const matchesTitle = title
+              ? ownedBook.title.toLowerCase().includes(title.toLowerCase())
+              : true;
+            const matchesAuthor = author
+              ? ownedBook.author.toLowerCase().includes(author.toLowerCase())
+              : true;
+            const matchesGenre = genre
+              ? ownedBook.genre.toLowerCase().includes(genre.toLowerCase())
+              : true;
+
+            if (matchesTitle && matchesAuthor && matchesGenre) {
+              potentialMatches.push({
+                matchedUser: potentialMatch.username,
+                matchedBook: {
+                  title: ownedBook.title,
+                  author: ownedBook.author,
+                  genre: ownedBook.genre,
+                },
+              });
+            }
           }
         });
       });
     });
 
+    if (potentialMatches.length === 0) {
+      return res.status(200).json({ message: "No matches found" });
+    }
+
     res.status(200).json(potentialMatches);
   } catch (error) {
     console.error("Error finding potential matches:", error);
-    throw new Error("Internal Server Error");
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
