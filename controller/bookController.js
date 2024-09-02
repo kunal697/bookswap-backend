@@ -23,7 +23,8 @@ exports.listBook = [
         return res.status(400).send("No file uploaded.");
       }
 
-      const { title, author, genre, owner } = req.body;
+      const { title, author, genre } = req.body;
+      const owner = req.user;
 
       // Check if the same user has already listed a book with the same title, author, and genre
       const existingBook = await Book.findOne({ title, author, genre, owner });
