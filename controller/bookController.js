@@ -135,7 +135,7 @@ exports.deleteBook = async (req, res) => {
 
 exports.getOwnedBooks = async (req, res) => {
   try {
-    const userId = req.params.userId;
+    const userId = req.user;
 
     // Find the user and populate the ownedBooks field
     const user = await User.findById(userId).populate("ownedBooks");
@@ -225,7 +225,7 @@ exports.findPotentialMatches = async (req, res) => {
 
 exports.addToWantedBooks = async (req, res) => {
   try {
-    const userId = req.params.id; // ID of the user who wants to add the book
+    const userId = req.user; // ID of the user who wants to add the book
     const bookId = req.body.bookId; // ID of the book to be added to wantedBooks
 
     // Find the user
