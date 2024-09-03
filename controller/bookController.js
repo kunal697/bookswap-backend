@@ -267,8 +267,13 @@ exports.getWishlist = async (req, res) => {
     const userId = req.user; // Extract user ID from the middleware
 
     // Fetch the user's wanted books
-    const user = await User.findById(userId).populate("wantedBooks");
-
+    const user = await User.findById(userId).populate({
+      path: "wantedBooks",
+      populate: {
+        path: "owner",
+        select: "username", // Only select the username field
+      },
+    });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
