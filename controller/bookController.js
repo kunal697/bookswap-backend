@@ -121,10 +121,9 @@ exports.deleteBook = async (req, res) => {
     await User.findOneAndUpdate(book.owner, {
       $pull: { ownedBooks: bookId },
     });
-    // console.log("Update result:", updateResult);
 
     // Delete the book from the collection
-    await Book.findOneAndDelete(bookId);
+    await Book.deleteOne({ _id: bookId });
 
     res.status(200).send("Book deleted and removed from owner's ownedBooks");
   } catch (error) {
