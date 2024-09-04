@@ -90,8 +90,25 @@ exports.getOutgoingRequests = async (req, res) => {
     const outgoingRequests = await Request.find({ fromUser: req.user })
       .populate("book toUser")
       .exec();
+    const formattedRequests = outgoingRequests.map((request) => ({
+      _id: request._id,
+      book: {
+        _id: request.book._id,
+        title: request.book.title,
+        author: request.book.author,
+        genre: request.book.genre,
+        imageUrl: request.book.imageUrl,
+        owner: request.book.owner,
+        __v: request.book.__v,
+      },
+      toUser: {
+        _id: request.toUser._id,
+        username: request.toUser.username,
+      },
+      status: request.status,
+    }));
 
-    res.status(200).json(outgoingRequests);
+    res.status(200).json(formattedRequests);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
