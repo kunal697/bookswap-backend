@@ -197,6 +197,7 @@ exports.findPotentialMatches = async (req, res) => {
             if (matchesTitle && matchesAuthor && matchesGenre) {
               potentialMatches.push({
                 matchedUser: potentialMatch.username,
+                _id: potentialMatch._id,
                 matchedBook: {
                   title: ownedBook.title,
                   author: ownedBook.author,
