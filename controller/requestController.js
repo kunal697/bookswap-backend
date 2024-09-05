@@ -117,7 +117,14 @@ exports.getOutgoingRequests = async (req, res) => {
 exports.getIncomingRequests = async (req, res) => {
   try {
     const incomingRequests = await Request.find({ toUser: req.user })
-      .populate("book fromUser")
+      .populate({
+        path: "book",
+        select: "title author genre imageUrl owner __v",
+      })
+      .populate({
+        path: "fromUser",
+        select: "username",
+      })
       .exec();
 
     res.status(200).json(incomingRequests);
