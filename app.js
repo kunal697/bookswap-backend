@@ -22,9 +22,9 @@ app.use(
   })
 );
 
-app.use("/api/auth", authRoutes);
-app.use("/api/exchange", exchangeRoutes);
-app.use("/api/books", bookRoutes);
+app.use("/auth", authRoutes);
+app.use("/exchange", exchangeRoutes);
+app.use("/books", bookRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
