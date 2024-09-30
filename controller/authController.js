@@ -112,7 +112,7 @@ exports.fetchUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json(user); // Send user details as response
+    res.json(user);  
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
