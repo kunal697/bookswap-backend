@@ -8,6 +8,6 @@ router.post("/register", authController.register);
 router.get("/verify/:token", authController.verifyEmail);
 router.post("/login", authController.login);
 router.post("/logout", authController.logout);
-router.get("/me", verifyToken, authController.fetchUser);
+router.get("/me", verifyToken,authController.fetchUser);
 
 module.exports = router;
