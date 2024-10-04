@@ -91,7 +91,7 @@ exports.login = async (req, res) => {
 
     // Generate a JWT token if credentials are valid
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "21d",
     });
 
     // Respond with the token
@@ -104,15 +104,16 @@ exports.login = async (req, res) => {
 
 exports.fetchUser = async (req, res) => {
   try {
-    const userId = req.user; // Get the user ID from the token payload
+    const userId = req.user.id;
+    // console.log("User ID:", userId); 
 
-    const user = await User.findOne(userId).populate("ownedBooks wantedBooks"); // Fetch user details
+    const user = await User.findById(userId).populate("ownedBooks wantedBooks"); 
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json(user);  
+    res.json(user); 
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
